@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form onsubmit="saveTolocalstorage(event)">
+        <laber>Selling Price</laber>
+        <input type="number" id="usernametag" Name="username" value="12"></input>
+        <label>Product Name</label>
+        <input type="text" id="producttag" Name="product" value="kettiur" ></input>
+        <label>Choose A Category</label>
+        <select Name="origin">
+            <option value="Electronics" Name="electronic" id="electronictag">Electronics</option>
+            <option value="Food" Name="food" id="foodtag">Food</option>
+            <option value="Skincare" Name="skincare" id="skincaretag">Skincare</option>
+        </select>
+        <button>Add Item</button>
+        </form>
+        <h1>Products</h1>
+        <ul id="itemsofelectronics"><h2>Electronics Items</h2></ul>
+        <ul  id="itemsoffood"><h2>Food Items</h2></ul>
+        <ul class="itemsofskincare"><h2>SkinCare Items</h2></ul>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+        function saveTolocalstorage(event){
+    event.preventDefault();
+    const sellingprice=event.target.username.value;
+    const fooditems=event.target.product.value;
+   const items=event.target.origin.value;
+    const obj=
+    {
+        sellingprice,
+        fooditems,
+        items,
+    }
+    axios.post("https://crudcrud.com/api/e4a0ecbf8abf420597839390085b1ae2/aru",obj)
+        .then((response)=>{
+            console.log(response)
+            showuseronscreen(response.data)
+            showuseron2(response.data)
+             })
+        .catch((err)=>{
+            console.log(err)
+        })
+    
+        showuseronscreen(obj)
+        showuseron2(obj)
+    }
+window.addEventListener("DOMContentLoaded", () =>{
+    axios.get("https://crudcrud.com/api/e4a0ecbf8abf420597839390085b1ae2/aru")
+            .then((response)=>{
+                console.log(response)
+                for(var i=0;i<response.data.length;i++)
+            {
+                showuseronscreen(response.data[i])
+                showuseron2(response.data[i])
+            }
+            })
+
+})
+
+
+    
+
+
+ function showuseronscreen(obj)
+ { 
+    const parentelement=document.getElementById("itemsofelectronics")
+    const childelem=document.createElement("li");
+    childelem.appendChild(document.createTextNode(obj.sellingprice+"-"+obj.fooditems+"-"+obj.items))
+    var deletebtn=document.createElement("button")
+    deletebtn.appendChild(document.createTextNode("DELETE ORDER"))
+    childelem.appendChild(deletebtn) 
+    parentelement.append(childelem)
+    
+    deletebtn.onclick=()=>{
+        axios.delete(`https://crudcrud.com/api/e4a0ecbf8abf420597839390085b1ae2/aru/${obj._id}`)
+        .then((response)=>{
+            console.log(response)
+             })
+        .catch((err)=>{
+            console.log(err)
+        })
+            //localStorage.removeItem(obj.email)
+            parentelement.removeChild(childelem)
+            //childElem.appendChild(localStorage.getItem("obj.email")) 
+    }
+}
+function showuseron2(obj)
+ {
+    const parentelement=document.getElementById("itemsoffood")
+    const childelem=document.createElement("li");
+    childelem.appendChild(document.createTextNode(obj.sellingprice+"-"+obj.fooditems+"-"+obj.items))
+    parentelement.append(childelem)
+    var deletebtn=document.createElement("button")
+    deletebtn.appendChild(document.createTextNode("DELETE USER"))
+    childelem.appendChild(deletebtn)
+    deletebtn.onclick=()=>{
+        axios.delete(`https://crudcrud.com/api/e4a0ecbf8abf420597839390085b1ae2/aru/${obj._id}`)
+        .then((response)=>{
+            console.log(response)
+             })
+        .catch((err)=>{
+            console.log(err)
+        })
+            //localStorage.removeItem(obj.email)
+            parentelement.removeChild(childelem)
+            //childElem.appendChild(localStorage.getItem("obj.email")) 
+    }
+}
+
+ 
+
+    
+ 
+
+
+    </script>
+</body>
+</html>
