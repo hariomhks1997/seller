@@ -24,6 +24,7 @@
         <ul id="itemsofelectronics"><h2>Electronics Items</h2></ul>
         <ul  id="itemsoffood"><h2>Food Items</h2></ul>
         <ul class="itemsofskincare"><h2>SkinCare Items</h2></ul>
+        <script src="index.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script>
         function saveTolocalstorage(event){
@@ -46,7 +47,9 @@
         .catch((err)=>{
             console.log(err)
         })
-    
+        localStorage.setItem(obj.items,JSON.stringify(obj))
+        localStorage.setItem(obj.fooditems,JSON.stringify(obj))
+         localStorage.setItem(obj.sellingprice,JSON.stringify(obj))
         showuseronscreen(obj)
         showuseron2(obj)
     }
@@ -60,6 +63,16 @@ window.addEventListener("DOMContentLoaded", () =>{
                 showuseron2(response.data[i])
             }
             })
+        const localStorageobj=localStorage;
+        const localStoragekeys=Object.keys(localStorageobj)
+        for(var i=0;i<localStoragekeys.length;i++)
+        {
+            const key=localStoragekeys[i]
+            const userdetails=localStorageobj[key]
+            const userdetailsobj=JSON.parse(userdetails)
+            showuseronscreen(userdetailsobj)
+            showuseron2(userdetailsobj)
+        }
 
 })
 
@@ -85,7 +98,7 @@ window.addEventListener("DOMContentLoaded", () =>{
         .catch((err)=>{
             console.log(err)
         })
-            //localStorage.removeItem(obj.email)
+            localStorage.removeItem(obj.sellingprice)
             parentelement.removeChild(childelem)
             //childElem.appendChild(localStorage.getItem("obj.email")) 
     }
@@ -107,7 +120,7 @@ function showuseron2(obj)
         .catch((err)=>{
             console.log(err)
         })
-            //localStorage.removeItem(obj.email)
+            localStorage.removeItem(obj.sellingprice)
             parentelement.removeChild(childelem)
             //childElem.appendChild(localStorage.getItem("obj.email")) 
     }
