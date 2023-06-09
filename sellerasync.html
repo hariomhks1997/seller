@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <style>
+        .container {
+            background-color: aqua;
+            text-align: center;
+            margin-top: 10px;
+            width: 500px;
+            border-radius: 50px;
+            border-style: double;
+        }
+
+        header {
+            text-align: center;
+            background-color: honeydew;
+            margin-left: 100px;
+            margin-right: 100px;
+            border-radius: 10px;
+        }
+
+        body {
+            background-color: lightgreen;
+        }
+
+        li {
+            background-color: violet;
+            width: fit-content;
+            color: black;
+            font-size: medium;
+        }
+
+        .card {
+            background-color: yellow;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 20px;
+            height: fit-content;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <header>
+            <h1>Seller Admin Page</h1>
+        </header>
+    </div>
+    <div class="container">
+        <form onsubmit="saveTolocalstorage(event)">
+            <label>Selling Price</label><br>
+            <input type="number" id="usernametag" Name="username" class="form-control-sm"
+                style="width: 180px;border-width: 10px;" required></input><br>
+            <label>Product Name</label><br>
+            <input type="text" id="producttag" Name="product" class="form-control-sm"
+                style="width: 180px;border-width: 10px;" required></input><br>
+            <label>Choose A Category</label><br>
+            <select Name="origin" class="form-control-sm" style="width: 180px;border-width: 10px;">
+                <option value="Electronics" Name="electronic" id="electronictag">Electronics</option>
+                <option value="Food" Name="food" id="foodtag">Food</option>
+                <option value="Skincare" Name="skincare" id="skincaretag">Skincare</option>
+            </select><br>
+            <button class="form-control-sm">Add Item</button>
+        </form>
+        <div class="card">
+            <div class="card-body">
+                <h1 style="background-color:grey; width: 10; border-radius: 10px;">Products</h1>
+                <ul id="itemsofelectronics" class="list-group">
+                    <h5>Electronics Items :-</h5>
+                </ul>
+                <ul id="itemsoffood" class="list-group">
+                    <h5>Food Items :-</h5>
+                </ul>
+                <ul id="itemsofskincare" class="list-group">
+                    <h5>SkinCare Items :-</h5>
+                </ul>
+                <pre>
+        <ul class="list-group" ><h2>Total Price :- <span style="font-size: x-large;display:none;" id="total">0</span></h2></ul>
+    </pre>
+            </div>
+        </div>
+    </div>
+    <script src="index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+        async function saveTolocalstorage(event) {
+            event.preventDefault();
+            const sellingprice = event.target.username.value;
+            const fooditems = event.target.product.value;
+            const items = event.target.origin.value;
+            const obj =
+            {
+                sellingprice,
+                fooditems,
+                items,
+            }
+            try {
+                const post = await axios.post("https://crudcrud.com/api/6da9088a4f0f4d50a2d3a1fab29a1f69/aru", obj)
+                console.log(post)
+                showuseronscreen(post.data)
+
+            } catch (err) {
+                console.log(err)
+            }
+            event.target.username.value = "";
+            event.target.product.value = "";
+        }
+        window.addEventListener("DOMContentLoaded", async function () {
+            try {
+                const get = await axios.get("https://crudcrud.com/api/6da9088a4f0f4d50a2d3a1fab29a1f69/aru")
+                console.log(get)
+                for (var i = 0; i < get.data.length; i++) {
+                    showuseronscreen(get.data[i])
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        })
+        function showuseronscreen(obj) {
+
+            const parentelement1 = document.getElementById("itemsofelectronics")
+            const parentelement2 = document.getElementById("itemsoffood")
+            const parentelement3 = document.getElementById("itemsofskincare")
+            const parentelement4 = document.getElementById("total")
+            parentelement4.style.display = "contents"
+            var deletebtn = document.createElement("button")
+            deletebtn.appendChild(document.createTextNode("DELETE ORDER"))
+            const price = parseInt(obj.sellingprice)
+            parentelement4.textContent = parseInt(parentelement4.textContent) + price
+            if (obj.items == "Electronics") {
+                var childelem1 = document.createElement("li");
+                childelem1.className = "list-group-item"
+                childelem1.style.background = "khaki"
+                childelem1.style.color = "green"
+                childelem1.appendChild(document.createTextNode(obj.sellingprice + "-" + obj.fooditems + "-" + obj.items))
+                childelem1.appendChild(deletebtn)
+                parentelement1.append(childelem1)
+                console.log(parentelement1)
+            }
+            else if (obj.items == "Food") {
+                var childelem2 = document.createElement("li");
+                childelem2.className = "list-group-item"
+                childelem2.style.background = "khaki"
+                childelem2.style.color = "green"
+                childelem2.appendChild(document.createTextNode(obj.sellingprice + "-" + obj.fooditems + "-" + obj.items))
+                childelem2.appendChild(deletebtn)
+                parentelement2.append(childelem2)
+            }
+            else {
+                var childelem3 = document.createElement("li");
+                childelem3.className = "list-group-item"
+                childelem3.style.color = "green"
+                childelem3.style.background = "khaki"
+                childelem3.appendChild(document.createTextNode(obj.sellingprice + "-" + obj.fooditems + "-" + obj.items))
+                childelem3.appendChild(deletebtn)
+                parentelement3.append(childelem3)
+            }
+            deletebtn.onclick = async () => {
+                if (obj.items == "Electronics") {
+                    parentelement1.removeChild(childelem1);
+                }
+                else if (obj.items == "Food") {
+                    parentelement2.removeChild(childelem2);
+                }
+                else {
+                    parentelement3.removeChild(childelem3);
+                }
+                const price = parseInt(obj.sellingprice)
+                parentelement4.textContent = parseInt(parentelement4.textContent) - price;
+                try {
+                    const delet = await axios.delete(`https://crudcrud.com/api/6da9088a4f0f4d50a2d3a1fab29a1f69/aru/${obj._id}`)
+                    console.log(delet)
+                    
+                } catch (err) {
+                    console.log(err)
+                }
+                
+            }
+        }
+    </script>
+</body>
+
+</html>
